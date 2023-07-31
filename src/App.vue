@@ -64,8 +64,7 @@ function openModal() {
 function closeModal() {
     modal.value?.hide();
 
-    selectedManga.value = undefined;
-    mangaChapters.value = undefined;
+    chapterImages.value = [];
 }
 
 onMounted(() => {
@@ -73,11 +72,61 @@ onMounted(() => {
         document.getElementById('exampleModal') as HTMLElement
     );
 });
+
+// Send chapter to backend and get images
+
+const chapterImages = ref<string[]>([]);
+
+async function sendChapterToBackend(index: number) {
+    try {
+        const response = await fetch('http://localhost:3000/chapter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify({
+                link: mangaChapters.value?.chapters[index],
+            }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+        if (data.length > 0) {
+            chapterImages.value = data[0];
+        } else {
+            chapterImages.value = [
+                'https://linube.com/blog/wp-content/uploads/error-404.jpg',
+            ];
+        }
+
+        chapterImages.value.forEach((element) => {
+            console.log(element);
+        });
+
+        chapterImages.value.pop();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+watch(chapterImages, () => {
+    console.log(chapterImages.value);
+});
+
+function reloadImages() {
+    chapterImages.value = [];
+}
+
+// Show caption
+const showCaption = ref<boolean>(false);
 </script>
 
 <template>
     <div class="container mt-5">
         <h1 class="text-center text-primary fw-bold">Buscador Manga</h1>
+
+        <!-- Search -->
         <div class="d-flex justify-content-center align-items-center flex-column">
             <input
                 type="text"
@@ -115,7 +164,6 @@ onMounted(() => {
     </div>
 
     <!-- Modal -->
-
     <div
         class="modal fade"
         id="exampleModal"
@@ -140,15 +188,14 @@ onMounted(() => {
                     <button
                         @click="closeModal"
                         type="button"
-                        class="close"
+                        class="close animated tada"
                         data-dismiss="modal"
-                        aria-label="Close">
+                        aria-label="Close ">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <!-- Chapters -->
-
                     <div v-if="mangaChapters" class="row">
                         <div class="row">
                             <div
@@ -169,18 +216,101 @@ onMounted(() => {
                                             :href="mangaChapters.chapters[index]"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            class="btn btn-primary">
+                                            class="btn btn-link">
                                             Leer Capítulo
                                         </a>
+                                        <button
+                                            @click="sendChapterToBackend(index)"
+                                            class="btn btn-info btn-sm">
+                                            Enviar al backend
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Spinner -->
                     <div
                         v-else
                         class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <!-- Chapter images -->
+
+                    <!-- Carousel Bootstrap -->
+                    <div
+                        v-if="chapterImages"
+                        id="carouselExampleIndicators"
+                        class="carousel slide"
+                        data-bs-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li
+                                v-for="(imagen, index) in chapterImages"
+                                :key="index"
+                                :data-bs-target="'#carouselExampleIndicators'"
+                                :data-bs-slide-to="index"
+                                :class="{ active: index === 0 }"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div
+                                v-for="(imagen, index) in chapterImages"
+                                :key="index"
+                                :class="{
+                                    'carousel-item': true,
+                                    active: index === 0,
+                                }"
+                                @mouseover="showCaption = true"
+                                @mouseleave="showCaption = false">
+                                <img
+                                    :src="imagen"
+                                    class="d-block w-100"
+                                    :alt="mangaChapters?.chapters_titles[index]" />
+
+                                <!-- This line need a modification -->
+                                <div
+                                    v-if="showCaption"
+                                    class="carousel-caption d-md-block bg-dark rounded text-white p-2">
+                                    <h5>
+                                        {{
+                                            mangaChapters?.chapters_titles[index] ||
+                                            'Capítulo ' +
+                                                (index + 1) +
+                                                ' ' +
+                                                mangaChapters?.mangaTitle
+                                        }}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <a
+                            class="carousel-control-prev"
+                            href="#carouselExampleIndicators"
+                            role="button"
+                            data-bs-slide="prev">
+                            <span
+                                class="carousel-control-prev-icon"
+                                aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </a>
+                        <a
+                            class="carousel-control-next"
+                            href="#carouselExampleIndicators"
+                            role="button"
+                            data-bs-slide="next">
+                            <span
+                                class="carousel-control-next-icon"
+                                aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </a>
+                    </div>
+
+                    <!-- Spinner -->
+                    <div v-else class="text-center">
+                        <h5 class="text-center">Cargando...</h5>
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
@@ -194,8 +324,12 @@ onMounted(() => {
                         data-dismiss="modal">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary">
-                        Save changes
+
+                    <button
+                        @click="reloadImages"
+                        type="button"
+                        class="btn btn-danger">
+                        Reset Images
                     </button>
                 </div>
             </div>
@@ -224,6 +358,20 @@ onMounted(() => {
     justify-content: space-between;
 }
 
+.close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #000;
+}
+
+.close:hover {
+    color: #ff0000;
+    transition: all 0.3s ease;
+
+    animation: tada-animation 0.5s ease infinite;
+}
+
 /* Card styles */
 .card {
     cursor: pointer;
@@ -232,5 +380,60 @@ onMounted(() => {
 .card-img-top:hover {
     filter: brightness(0.8);
     transition: all 0.3s ease;
+}
+
+/* Carousel styles */
+.carousel-item {
+    height: 65vh;
+}
+
+.carousel-item img {
+    object-fit: contain;
+    height: 100%;
+}
+
+/* Spinner styles */
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Animations */
+
+@keyframes tada-animation {
+    0% {
+        transform: scale(1);
+    }
+    10% {
+        transform: scale(0.9) rotate(-3deg);
+    }
+    20% {
+        transform: scale(1.1) rotate(3deg);
+    }
+    30% {
+        transform: scale(1.1) rotate(-3deg);
+    }
+    40% {
+        transform: scale(1.1) rotate(3deg);
+    }
+    50% {
+        transform: scale(1.1) rotate(-3deg);
+    }
+    60% {
+        transform: scale(1.1) rotate(3deg);
+    }
+    70% {
+        transform: scale(1.1) rotate(-3deg);
+    }
+    80% {
+        transform: scale(1.1) rotate(3deg);
+    }
+    90% {
+        transform: scale(1.1) rotate(-3deg);
+    }
+    100% {
+        transform: scale(1) rotate(0);
+    }
 }
 </style>
