@@ -63,7 +63,7 @@ npm run dev
 
 <p align="center">  
       <video autoplay>
-        <source src="https://i.imgur.com/6Yg91WX.mp4" type="video/mp4">
+        <source src="https://i.imgur.com/nhyOAO2.mp4" type="video/mp4">
       </video>
 </p>
 
