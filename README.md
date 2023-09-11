@@ -61,12 +61,9 @@ npm run dev
 
 ## Preview
 
-<p align="center">  
-      <video autoplay>
-        <source src="https://i.imgur.com/nhyOAO2.mp4" type="video/mp4">
-      </video>
+<p align="center">
+    <img src="https://i.imgur.com/6TSABLu.gif" alt="Demo">
 </p>
-
 
 ---
 
