@@ -62,8 +62,8 @@ npm run dev
 ## Preview
 
 <p align="center">  
-      <video autoplay muted loop >
-        <source src="https://i.imgur.com/6Yg91WX.mp4" type="video/mp4">
+      <video autoplay>
+        <source src="[https://imgur.com/6Yg91WX](https://i.imgur.com/6Yg91WX.mp4)" type="video/mp4">
       </video>
 </p>
 
