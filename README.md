@@ -59,6 +59,14 @@ npm run dev
 
 ---
 
+## Preview
+
+<p align="center">
+    <img src="https://i.imgur.com/0AmOXLa.gif" alt="Demo">
+</p>
+
+---
+
 ## Docs 📚
 
 -   [Leercapitulo](https://www.leercapitulo.com/)
