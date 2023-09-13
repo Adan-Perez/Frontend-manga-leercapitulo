@@ -1,8 +1,9 @@
 {
-  "name": "project-manga",
+  "name": "frontend-manga-leercapitulo",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "author": "Adan-Perez",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
