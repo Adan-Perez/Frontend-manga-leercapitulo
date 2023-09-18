@@ -1,6 +1,5 @@
 # MANGA READER - VUE 
 **Author/Autor**: [Adan-Perez](https://github.com/Adan-Perez)
-IN PROGRESS (Beta version)
 
 > EN
 
@@ -61,6 +60,8 @@ npm run dev
 ---
 
 ## Preview
+
+IN PROGRESS (Beta version)
 
 <p align="center">
     <img src="https://i.imgur.com/6TSABLu.gif" alt="Demo">
