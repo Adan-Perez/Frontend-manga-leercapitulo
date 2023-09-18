@@ -1,5 +1,6 @@
-# MANGA READER - VUE
+# MANGA READER - VUE 
 **Author/Autor**: [Adan-Perez](https://github.com/Adan-Perez)
+IN PROGRESS (Beta version)
 
 > EN
 
@@ -72,8 +73,12 @@ npm run dev
 -   [Leercapitulo](https://www.leercapitulo.com/)
 -   [Vue](https://vuejs.org/)
 
+---
+
+Developed with ❤ by [Adan-Perez](https://github.com/Adan-Perez)
+
 <p align="center" 
     style="width: 100%; height: 100%;"
 >
-  <img src="https://storage.googleapis.com/sticker-prod/Wren242GEdiHYWm6ZGJp/5.png" alt="Texto alternativo de la imagen">
+  <img src="https://storage.googleapis.com/sticker-prod/Wren242GEdiHYWm6ZGJp/5.png" alt="naruto-image">
 </p>
